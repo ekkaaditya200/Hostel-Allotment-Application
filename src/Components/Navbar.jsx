@@ -5,6 +5,7 @@ import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { useStateContext } from '../Contexts/ContextProvider';
 import ThemeSettings from './ThemeSettings'
 import avatar from '../data/avatar.jpg';
+import { auth } from '../Firebase/Config';
 const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
 
     <TooltipComponent content={title} position="BottomCenter">
@@ -23,7 +24,7 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
     </TooltipComponent>
 );
 const Navbar = () => {
-    const { currentColor, activeMenu, setActiveMenu, setScreenSize, screenSize, themeSettings, setThemeSettings } = useStateContext();
+    const { currentColor, activeMenu, setActiveMenu, setScreenSize, screenSize, themeSettings, setThemeSettings, user } = useStateContext();
     useEffect(() => {
         const handleResize = () => setScreenSize(window.innerWidth);
 
@@ -71,20 +72,21 @@ const Navbar = () => {
                 {!activeMenu && <TooltipComponent content="Profile" position="BottomCenter">
                     <div
                         className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg"
-                    // onClick={() => handleClick('userProfile')}
                     >
                         <img
                             className="rounded-full w-8 h-8"
-                            src={avatar}
+                            src={user.loggedin == true ? user.photoURL : avatar}
                             alt="user-profile"
                         />
-                        <p>
-                            <span className="text-gray-400 text-14">Hi,</span>{' '}
-                            <span className="text-gray-400 font-bold ml-1 text-14">
-                                Aditya Ekka
-                            </span>
-                        </p>
-                        {/* <MdKeyboardArrowDown className="text-gray-400 text-14" /> */}
+                        {
+                            user.loggedin == true ?
+                                <p>
+                                    <span className="text-gray-400 text-14">Hi,</span>{' '}
+                                    <span className="text-gray-400 font-bold ml-1 text-14">
+                                        {user.name}
+                                    </span>
+                                </p> : <p>Signin</p>
+                        }
                     </div>
                 </TooltipComponent>
                 }

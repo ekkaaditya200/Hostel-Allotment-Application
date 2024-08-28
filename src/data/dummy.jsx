@@ -17,19 +17,28 @@ export const links = [
     // title: 'Pages',
     links: [
       {
+        role: 'student',
         name: 'room',
         icon: <MdOutlineBedroomChild />,
       },
       {
-        name: 'students',
-        icon: < TbListDetails />,
-      },
-      {
+        role: 'student',
         name: 'details',
         icon: <TbBrandBooking />,
       },
       {
+        role: 'admin',
+        name: 'students',
+        icon: < TbListDetails />,
+      },
+      {
+        role: 'admin',
         name: 'booking',
+        icon: <TbBrandBooking />,
+      },
+      {
+        role: 'admin',
+        name: 'alloted-students',
         icon: <TbBrandBooking />,
       },
     ],

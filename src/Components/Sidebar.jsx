@@ -3,12 +3,17 @@ import { MdOutlineCancel } from 'react-icons/md';
 import { TooltipComponent } from '@syncfusion/ej2-react-popups';
 import { useStateContext } from '../Contexts/ContextProvider';
 import { RiHotelFill } from "react-icons/ri";
-import { SiShopware } from 'react-icons/si';
 import { links } from '../data/dummy';
 import avatar from '../data/avatar.jpg';
-// import { useStateContext } from '../contexts/ContextProvider';
+import { Button } from '@mui/material';
+import { signOut } from 'firebase/auth';
+import { auth } from "../Firebase/Config"
+import { useNavigate } from 'react-router-dom';
+
 const Sidebar = () => {
-  const { currentColor, activeMenu, setActiveMenu, screenSize } = useStateContext();
+  const navigate = useNavigate();
+  const { currentColor, activeMenu, setActiveMenu, screenSize, user, setUser } = useStateContext();
+
 
   const handleCloseSideBar = () => {
     if (activeMenu !== undefined && screenSize <= 900) {
@@ -18,6 +23,17 @@ const Sidebar = () => {
 
   const activeLink = 'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg  text-white  text-md m-2';
   const normalLink = 'flex items-center gap-5 pl-4 pt-3 pb-2.5 rounded-lg text-md text-gray-700 dark:text-gray-200 dark:hover:text-black hover:bg-light-gray m-2';
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser({ loggedin: false, name: "", email: "" });
+      localStorage.removeItem('user');
+      navigate('/signin');
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">
@@ -46,15 +62,18 @@ const Sidebar = () => {
             >
               <img
                 className="rounded-full w-28 h-28"
-                src={avatar}
+                src={user.loggedin == true ? user.photoURL : avatar}
                 alt="user-profile"
               />
               <p>
                 <span className="text-gray-400 text-14">Hi,</span>{' '}
                 <span className="text-gray-400 font-bold ml-1 text-14">
-                  Aditya Ekka
+                  {user.name}
                 </span>
               </p>
+              {
+                user.loggedin && <Button onClick={logout}>Logout</Button>
+              }
             </div>
           </TooltipComponent>
 
@@ -65,6 +84,7 @@ const Sidebar = () => {
                   {item.title}
                 </p>
                 {item.links.map((link) => (
+                  link.role === user.role &&
                   <NavLink
                     to={`/${link.name}`}
                     key={link.name}
@@ -77,6 +97,7 @@ const Sidebar = () => {
                     {link.icon}
                     <span className="capitalize ">{link.name}</span>
                   </NavLink>
+
                 ))}
               </div>
             ))}
