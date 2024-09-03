@@ -59,7 +59,7 @@ export default function Students() {
 
   return (
     <Layout>
-    <Box sx={{ height: '90%', width: '90%', position: "absolute" }}>
+    <Box sx={{ height: '70%', width: '90%', position: "absolute" }}>
       <DataGrid
         {...data}
         disableColumnFilter

@@ -26,11 +26,11 @@ const Layout = ({children}) => {
                         : 'bg-main-bg dark:bg-main-dark-bg w-full min-h-screen flex-2'
                 }
             >
-                <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full">
+                <div className="fixed md:static bg-gray-200 dark:bg-main-dark-bg navbar w-full">
                     <Navbar />
                 </div>
 
-                <div className='w-full h-full flex justify-center items-start relative z-1 overflow-auto mt-20 md:mt-0 bg-slate-400'>
+                <div className='w-full h-full flex justify-center items-start relative z-1 p-10 overflow-y-scroll mt-20 md:mt-0 dark:bg-secondary-dark-bg bg-main-bg '>
                     {themeSettings && (<ThemeSettings />)}
                    {children}
                 </div>

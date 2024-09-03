@@ -6,6 +6,8 @@ import { collection, getDocs, query, where, updateDoc, doc } from 'firebase/fire
 import { db } from '../../Firebase/Config';
 import { Button, Stack } from '@mui/material';
 import Layout from "../../Components/Layout";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -58,7 +60,8 @@ export default function Booking() {
 
           // If student found, then allocate room if it is not full
           if (studentData) {
-            console.log(studentData);
+
+            //! console.log(studentData);
 
             const roomcoll = collection(db, 'rooms');
             const roomquery = query(roomcoll, where('roomNo', '==', studentData.room));
@@ -66,7 +69,8 @@ export default function Booking() {
 
             for (const roomDoc of roomquerySnapshot.docs) {
               const roomis = roomDoc.data();
-              console.log("Room data = ", roomis);
+              
+              //! console.log("Room data = ", roomis);
 
               // Check if room has available slots
               if (roomis && (roomis.slots > 0)) {
@@ -75,7 +79,7 @@ export default function Booking() {
                 const docRef = doc(db, 'bookingData', docId);
 
                 const roomRef = doc(db, 'rooms', roomDoc.id);
-                
+
                 await updateDoc(roomRef, {
                   slots: roomis.slots - 1
                 });
@@ -84,7 +88,17 @@ export default function Booking() {
                   isverified: true
                 });
 
-                console.log(`Room allocated to ${row.userId}.`);
+               
+                toast.success(`Room Alloted to the user successfully ! ${row.rollno} `, {
+                  position: "top-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  });
               }
             }
           }
@@ -113,6 +127,7 @@ export default function Booking() {
 
   return (
     <Layout>
+       <Box sx={{ height: '90%', width: '90%', position: "absolute" }}>
       <Stack direction={'column'}>
         <Box>
           <Button onClick={allocate}>Allocate</Button>
@@ -135,6 +150,7 @@ export default function Booking() {
           />
         </Box>
       </Stack>
+      </Box>
     </Layout>
   );
 }

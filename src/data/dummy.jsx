@@ -1,7 +1,6 @@
 import { MdOutlineBedroomChild } from "react-icons/md";
 import { TbListDetails } from "react-icons/tb";
 import { TbBrandBooking } from "react-icons/tb";
-import { RiContactsLine } from "react-icons/ri"
 export const links = [
   // {
   //   title: 'Profile',

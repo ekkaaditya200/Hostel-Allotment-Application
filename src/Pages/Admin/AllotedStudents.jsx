@@ -1,9 +1,13 @@
 import { useEffect, useState, useMemo } from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { db } from '../../Firebase/Config';
-import { collection, getDocs } from 'firebase/firestore';
+import { DataGrid } from "@mui/x-data-grid";
 import Layout from "../../Components/Layout";
+import { Button, Stack } from '@mui/material';
+import { db } from "../../Firebase/Config";
+import { collection, getDocs, query, where, updateDoc, doc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const VISIBLE_FIELDS = [
   "id",
@@ -12,7 +16,9 @@ const VISIBLE_FIELDS = [
   "room",
 ];
 
+
 export default function AllotedStudents() {
+  const [selectdRows, setSelectedRows] = useState([]);
   const [data, setData] = useState({
     columns: [
       { field: "id", headerName: "S.No", width: 200 },
@@ -22,6 +28,70 @@ export default function AllotedStudents() {
     ],
     rows: [],
   });
+  const handleSelection = (Rows) => {
+    const selectedRowsData = data.rows.filter((row) => Rows.includes(row.id));
+    setSelectedRows(selectedRowsData);
+  }
+  const deallocate = async () => {
+
+    const coll = collection(db, 'bookingData');
+
+    if (selectdRows.length) {
+      for (const row of selectdRows) {
+        const q = query(coll, where('userId', '==', row.userId));
+        const querySnapshot = await getDocs(q);
+
+        // Find student in the booking database
+        for (const document of querySnapshot.docs) {
+          const studentData = document.data();
+
+          // If student found, then allocate room if it is not full
+          if (studentData) {
+            console.log(studentData);
+
+            const roomcoll = collection(db, 'rooms');
+            const roomquery = query(roomcoll, where('roomNo', '==', studentData.room));
+            const roomquerySnapshot = await getDocs(roomquery);
+
+            for (const roomDoc of roomquerySnapshot.docs) {
+              const roomis = roomDoc.data();
+              console.log("Room data = ", roomis);
+
+              // Check if room has available slots
+              if (roomis) {
+                // Allocate the room by updating the bookingData document
+                const docId = `${row.userId}_${row.rollno}`;
+                const docRef = doc(db, 'bookingData', docId);
+
+                const roomRef = doc(db, 'rooms', roomDoc.id);
+
+                await updateDoc(roomRef, {
+                  slots: roomis.slots + 1
+                });
+
+                await updateDoc(docRef, {
+                  isverified: false
+                });
+
+                toast.success(`Room Dealloted to the user successfully ! ${row.rollno} `, {
+                  position: "top-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  });
+              }
+            }
+          }
+        }
+      }
+    } else {
+      console.log("Please select the student(s)");
+    }
+  };
 
   const getData = async () => {
     try {
@@ -66,20 +136,31 @@ export default function AllotedStudents() {
   return (
     <Layout>
       <Box sx={{ height: '90%', width: '90%', position: "absolute" }}>
-        <DataGrid
-          {...data}
-          disableColumnFilter
-          disableColumnSelector
-          disableDensitySelector
-          columns={columns}
-          slots={{ toolbar: GridToolbar }}
-          slotProps={{
-            toolbar: {
-              showQuickFilter: true,
-            },
-          }}
-        />
+      <Stack direction={'column'}>
+        <Box>
+          <Button onClick={deallocate}>Deallocate</Button>
+        </Box>
+        <Box sx={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={data.rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+            onRowSelectionModelChange={handleSelection}
+          />
+        </Box>
+      </Stack>
       </Box>
     </Layout>
+
+
   );
 }

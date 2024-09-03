@@ -36,11 +36,11 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10">
+    <div className="ml-3 h-screen md:overflow-hidden overflow-auto md:hover:overflow-auto pb-10 border-r-2 dark:border-r-gray-600 border-r-gray-200">
       {activeMenu && (
         <>
           <div className="flex justify-between items-center">
-            <Link to="/" onClick={handleCloseSideBar} className="items-center gap-3 ml-3 mt-4 flex text-2xl font-extrabold tracking-tight dark:text-white text-slate-900">
+            <Link to="/" onClick={handleCloseSideBar} className="items-center gap-3 ml-3 mt-4 flex text-2xl font-extrabold tracking-tight dark:text-gray-300 text-slate-700">
               <RiHotelFill /> <span >Hostel Allotment</span>
             </Link>
 
@@ -58,16 +58,16 @@ const Sidebar = () => {
 
           <TooltipComponent content="Profile" position="BottomCenter">
             <div
-              className="flex flex-col justify-center w-full items-center gap-2 cursor-pointer hover:bg-light-gray rounded-lg mt-10"
+              className="flex flex-col justify-center w-full items-center gap-2 cursor-pointer  rounded-lg mt-10"
             >
               <img
                 className="rounded-full w-28 h-28"
                 src={user.loggedin == true ? user.photoURL : avatar}
                 alt="user-profile"
               />
-              <p>
-                <span className="text-gray-400 text-14">Hi,</span>{' '}
-                <span className="text-gray-400 font-bold ml-1 text-14">
+              <p className='dark:text-gray-300 text-slate-700 font-semibold tracking-widest text-[1rem] mt-2'>
+                <span>Hi,</span>{' '}
+                <span className="ml-1">
                   {user.name}
                 </span>
               </p>
