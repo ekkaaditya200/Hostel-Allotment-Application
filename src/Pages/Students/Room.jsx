@@ -181,7 +181,7 @@ function App() {
                         </form>
                     </div>
                         :  <div className='w-full flex justify-center items-center bg-slate-200 rounded-lg p-5'>
-                            <h1 className='font-bold'>Room A 108 is not alloted yet</h1>
+                            <h1 className='font-bold text-slate-700'>Room A 108 is not alloted yet</h1>
                         </div>
 
                 )
