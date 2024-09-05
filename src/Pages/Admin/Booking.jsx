@@ -8,6 +8,7 @@ import { Button, Stack } from '@mui/material';
 import Layout from "../../Components/Layout";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useStateContext } from '../../Contexts/ContextProvider';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -32,7 +33,7 @@ const columns = [
 ];
 
 export default function Booking() {
-
+  const { currentMode } = useStateContext();
   const [selectdRows, setSelectedRows] = useState([]);
   const [rows, setRows] = useState([]);
 
@@ -42,7 +43,7 @@ export default function Booking() {
     setSelectedRows(selectedRowsData);
   }
 
-  console.log("\nSelect rows", selectdRows);
+  // console.log("\nSelect rows", selectdRows);
 
   //Allocate the selected row(s) when allocate button is clicked
   const allocate = async () => {
@@ -64,6 +65,7 @@ export default function Booking() {
             //! console.log(studentData);
 
             const roomcoll = collection(db, 'rooms');
+
             const roomquery = query(roomcoll, where('roomNo', '==', studentData.room));
             const roomquerySnapshot = await getDocs(roomquery);
 
@@ -88,10 +90,35 @@ export default function Booking() {
                   isverified: true
                 });
 
+                //Update the room of actual details data
+                const studentcoll = collection(db, 'studentData');
+                const studentQuery=query(studentcoll, where('userId','==',row.userId))
+                const studentsSnapshot = await getDocs(studentQuery);
+                for (const document of studentsSnapshot.docs) {
+                  const student = document.data();
+                  if (student) {
+                    const studentDocRef = doc(studentcoll, document.id);
+                    await updateDoc(studentDocRef, {
+                      room:studentData.room
+                    });
+                  }}
                
-                toast.success(`Room Alloted to the user successfully ! ${row.rollno} `, {
+                toast.success(`Room Alloted to  ${row.rollno} successfully !`, {
                   position: "top-center",
-                  autoClose: 5000,
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                  });
+              }
+              else
+              {
+                toast.error(`Room is already full ! Can't allot to ${row.rollno} `, {
+                  position: "top-center",
+                  autoClose: 3000,
                   hideProgressBar: false,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -132,7 +159,11 @@ export default function Booking() {
         <Box>
           <Button onClick={allocate}>Allocate</Button>
         </Box>
-        <Box sx={{ height: 400, width: '100%' }}>
+        <Box
+         sx={{ height: 400, width: '100%','& .MuiDataGrid-root': {
+          color: currentMode === 'Dark' ? 'white' : 'black',
+        } }}
+        >
           <DataGrid
             rows={rows}
             columns={columns}

@@ -9,9 +9,11 @@ import Booking from './Pages/Admin/Booking';
 import SignIn from './Pages/SignIn';
 import PrivateRoute from './Components/PrivateRoute';
 import AllotedStudents from './Pages/Admin/AllotedStudents';
+import MessageList from './Pages/Students/Message';
+import SendMessage from './Pages/Admin/SendMessage';
 
 const App = () => {
-  const { setCurrentColor, setCurrentMode, currentMode, user } = useStateContext();
+  const { setCurrentColor, setCurrentMode, currentMode} = useStateContext();
 
   useEffect(() => {
     const currentThemeColor = localStorage.getItem('colorMode');
@@ -31,10 +33,12 @@ const App = () => {
 
           <Route path="/room" element={<PrivateRoute element={<Room />} roles={['student']} />} />
           <Route path="/details" element={<PrivateRoute element={<Details />} roles={['student']} />} />
+          <Route path="/messages" element={<PrivateRoute element={<MessageList />} roles={['student']} />} />
 
           <Route path="/students" element={<PrivateRoute element={<Students />} roles={['admin']} />} />
           <Route path="/booking" element={<PrivateRoute element={<Booking />} roles={['admin']} />} />
           <Route path="/alloted-students" element={<PrivateRoute element={<AllotedStudents />} roles={['admin']} />} />
+          <Route path="/send-message" element={<PrivateRoute element={<SendMessage />} roles={['admin']} />} />
 
         </Routes>
       </BrowserRouter>

@@ -18,27 +18,44 @@ export const links = [
       {
         role: 'student',
         name: 'room',
+        path:'room',
         icon: <MdOutlineBedroomChild />,
       },
       {
         role: 'student',
         name: 'details',
+        path:'details',
+        icon: <TbBrandBooking />,
+      },
+      {
+        role: 'student',
+        name: 'messages',
+        path:'messages',
         icon: <TbBrandBooking />,
       },
       {
         role: 'admin',
         name: 'students',
+        path:'students',
         icon: < TbListDetails />,
       },
       {
         role: 'admin',
         name: 'booking',
+        path:'booking',
         icon: <TbBrandBooking />,
       },
       {
         role: 'admin',
         name: 'alloted-students',
+        path:'alloted-students',
         icon: <TbBrandBooking />,
+      },
+      {
+        role: 'admin',
+        name: 'messages',
+        path:'send-message',
+        icon: < TbListDetails />,
       },
     ],
   }

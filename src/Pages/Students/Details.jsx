@@ -19,10 +19,14 @@ const firestore = getFirestore(app);
 
 const Details = () => {
   const { user, currentMode } = useStateContext();
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    room:"",
+  });
   const [result, setResult] = useState(null);
   const [feeReceipt, setFeeReceipt] = useState(null);
   const [studentDataExists, setStudentDataExists] = useState(false);
+
+  console.log(formData);
 
   useEffect(() => {
     if (user) {
@@ -68,12 +72,14 @@ const Details = () => {
 
   const uploadDetails = async () => {
     try {
-      const [feeUrl, resultUrl] = await Promise.all([
-        uploadFeeReceipt(),
-        uploadResult(),
-      ]);
+      const feeUrl = feeReceipt ? await uploadFeeReceipt() : formData.feeUrl;
+        const resultUrl = result ? await uploadResult() : formData.resultUrl;
 
-      const updatedFormData = { ...formData, feeUrl, resultUrl };
+        const updatedFormData = { 
+            ...formData, 
+            feeUrl: feeUrl || formData.feeUrl, 
+            resultUrl: resultUrl || formData.resultUrl 
+        };
 
       const coll = collection(firestore, "studentData");
       if (studentDataExists) {

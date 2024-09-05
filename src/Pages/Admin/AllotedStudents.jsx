@@ -7,7 +7,7 @@ import { db } from "../../Firebase/Config";
 import { collection, getDocs, query, where, updateDoc, doc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useStateContext } from '../../Contexts/ContextProvider';
 
 const VISIBLE_FIELDS = [
   "id",
@@ -18,6 +18,7 @@ const VISIBLE_FIELDS = [
 
 
 export default function AllotedStudents() {
+  const { currentMode } = useStateContext();
   const [selectdRows, setSelectedRows] = useState([]);
   const [data, setData] = useState({
     columns: [
@@ -73,9 +74,22 @@ export default function AllotedStudents() {
                   isverified: false
                 });
 
-                toast.success(`Room Dealloted to the user successfully ! ${row.rollno} `, {
+                const studentcoll = collection(db, 'studentData');
+                const studentQuery=query(studentcoll, where('userId','==',row.userId))
+                const studentsSnapshot = await getDocs(studentQuery);
+                for (const document of studentsSnapshot.docs) {
+                  const student = document.data();
+                  if (student) {
+                    const studentDocRef = doc(studentcoll, document.id);
+                    await updateDoc(studentDocRef, {
+                      room:"Na"
+                    });
+                    console.log(student);
+                  }}
+
+                toast.success(`Room Dealloted to ${row.rollno} successfully ! `, {
                   position: "top-center",
-                  autoClose: 5000,
+                  autoClose: 3000,
                   hideProgressBar: false,
                   closeOnClick: true,
                   pauseOnHover: true,
@@ -140,7 +154,11 @@ export default function AllotedStudents() {
         <Box>
           <Button onClick={deallocate}>Deallocate</Button>
         </Box>
-        <Box sx={{ height: 400, width: '100%' }}>
+        <Box sx={{ height: 400, width: '100%',
+           '& .MuiDataGrid-root': {
+            color: currentMode === 'Dark' ? 'white' : 'black',
+          }
+         }}>
           <DataGrid
             rows={data.rows}
             columns={columns}

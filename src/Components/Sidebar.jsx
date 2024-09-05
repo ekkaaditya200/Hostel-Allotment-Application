@@ -86,8 +86,8 @@ const Sidebar = () => {
                 {item.links.map((link) => (
                   link.role === user.role &&
                   <NavLink
-                    to={`/${link.name}`}
-                    key={link.name}
+                    to={`/${link.path}`}
+                    key={link.path}
                     onClick={handleCloseSideBar}
                     style={({ isActive }) => ({
                       backgroundColor: isActive ? currentColor : '',

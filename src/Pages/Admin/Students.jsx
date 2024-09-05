@@ -4,6 +4,8 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { db } from '../../Firebase/Config';
 import { collection, getDocs } from 'firebase/firestore';
 import Layout from "../../Components/Layout";
+import { useStateContext } from '../../Contexts/ContextProvider';
+
 
 const VISIBLE_FIELDS = [
   "id",
@@ -14,6 +16,9 @@ const VISIBLE_FIELDS = [
 ];
 
 export default function Students() {
+
+  const { currentMode } = useStateContext();
+
   const [data, setData] = useState({
     columns: [
       { field: "id", headerName: "S.No", width: 200 },
@@ -59,21 +64,30 @@ export default function Students() {
 
   return (
     <Layout>
-    <Box sx={{ height: '70%', width: '90%', position: "absolute" }}>
-      <DataGrid
-        {...data}
-        disableColumnFilter
-        disableColumnSelector
-        disableDensitySelector
-        columns={columns}
-        slots={{ toolbar: GridToolbar }}
-        slotProps={{
-          toolbar: {
-            showQuickFilter: true,
-          },
-        }}
-      />
-    </Box>
+      <Box 
+       sx={{
+        height: '70%',
+        width: '90%',
+        position: 'absolute',
+        '& .MuiDataGrid-root': {
+          color: currentMode === 'Dark' ? 'white' : 'black',
+        }
+      }}
+      >
+        <DataGrid
+          {...data}
+          disableColumnFilter
+          disableColumnSelector
+          disableDensitySelector
+          columns={columns}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{
+            toolbar: {
+              showQuickFilter: true,
+            },
+          }}
+        />
+      </Box>
     </Layout>
   );
 }

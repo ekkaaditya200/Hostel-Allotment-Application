@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Input, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { app, db } from '../../Firebase/Config';
@@ -154,8 +154,8 @@ function App() {
         <Stack className="p-4 flex flex-col gap-10 w-[90%] h-[90%] dark:text-gray-300 text-slate-700">
             {
                 alloted && <>
-                    <div>
-                        <h1 className='font-bold'>Room A 101 Alloted</h1>
+                    <div className='w-full flex justify-center items-center bg-slate-200 rounded-lg p-5'>
+                        <h1 className='font-bold'>Room <span className="text-blue-500">{studentData.room}</span> is alloted to you</h1>
                     </div>
                 </>
             }
@@ -180,8 +180,8 @@ function App() {
                             </Button>
                         </form>
                     </div>
-                        : <div>
-                            <h1 className='font-bold'>Room A 108 not Alloted Yet</h1>
+                        :  <div className='w-full flex justify-center items-center bg-slate-200 rounded-lg p-5'>
+                            <h1 className='font-bold'>Room A 108 is not alloted yet</h1>
                         </div>
 
                 )
