@@ -48,16 +48,12 @@ export default function AllotedStudents() {
 
           // If student found, then allocate room if it is not full
           if (studentData) {
-            console.log(studentData);
-
             const roomcoll = collection(db, 'rooms');
             const roomquery = query(roomcoll, where('roomNo', '==', studentData.room));
             const roomquerySnapshot = await getDocs(roomquery);
 
             for (const roomDoc of roomquerySnapshot.docs) {
               const roomis = roomDoc.data();
-              console.log("Room data = ", roomis);
-
               // Check if room has available slots
               if (roomis) {
                 // Allocate the room by updating the bookingData document
@@ -84,7 +80,6 @@ export default function AllotedStudents() {
                     await updateDoc(studentDocRef, {
                       room:"Na"
                     });
-                    console.log(student);
                   }}
 
                 toast.success(`Room Dealloted to ${row.rollno} successfully ! `, {
@@ -145,7 +140,7 @@ export default function AllotedStudents() {
     () =>
       data.columns.filter((column) => VISIBLE_FIELDS.includes(column.field)),
     [data.columns]
-  );
+  ); 
 
   return (
     <Layout>

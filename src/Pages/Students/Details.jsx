@@ -14,6 +14,7 @@ import {
   doc
 } from 'firebase/firestore';
 import Layout from '../../Components/Layout';
+import { toast } from "react-toastify";
 
 const firestore = getFirestore(app);
 
@@ -25,8 +26,6 @@ const Details = () => {
   const [result, setResult] = useState(null);
   const [feeReceipt, setFeeReceipt] = useState(null);
   const [studentDataExists, setStudentDataExists] = useState(false);
-
-  console.log(formData);
 
   useEffect(() => {
     if (user) {
@@ -85,10 +84,28 @@ const Details = () => {
       if (studentDataExists) {
         const studentDocRef = doc(coll, formData.id); // Use formData.id for the document reference
         await updateDoc(studentDocRef, updatedFormData);
-        alert("Data updated successfully!");
+        toast.success("Data updated successfully!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       } else {
         await addDoc(coll, updatedFormData);
-        alert("Data added successfully!");
+        toast.success("Data added successfully!", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     } catch (error) {
       console.error("Error uploading details:", error);
@@ -177,7 +194,7 @@ const Details = () => {
               />
             </Stack>
             <Stack spacing={2} direction={{ sm: "column", lg: "row" }} sx={{ marginBottom: 4 }}>
-            <div className='flex gap-3 flex-col'>
+            <div className='flex gap-3 flex-col mb-5'>
               <TextField
                 onChange={(e) => setResult(e.target.files[0])}
                 id='result'
@@ -194,8 +211,7 @@ const Details = () => {
                 </div>
               )}
               </div>
-              <div className='flex gap-3 flex-col'>
-                
+              <div className='flex gap-3 flex-col mb-5'>
               <TextField
                 onChange={(e) => setFeeReceipt(e.target.files[0])}
                 id='feereceipt'
@@ -233,6 +249,7 @@ const Details = () => {
                 color="secondary"
                 type="text"
                 sx={textFieldStyles(currentMode)}
+                
               />
             </Stack>
             <Button type="submit" variant="contained" color="primary">

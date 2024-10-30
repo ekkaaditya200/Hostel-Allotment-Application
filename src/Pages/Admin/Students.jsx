@@ -1,22 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { db } from '../../Firebase/Config';
-import { collection, getDocs } from 'firebase/firestore';
+import { db } from "../../Firebase/Config";
+import { collection, getDocs } from "firebase/firestore";
 import Layout from "../../Components/Layout";
-import { useStateContext } from '../../Contexts/ContextProvider';
+import { useStateContext } from "../../Contexts/ContextProvider";
 
-
-const VISIBLE_FIELDS = [
-  "id",
-  "fullname",
-  "rollno",
-  "department",
-  "sgpi",
-];
+const VISIBLE_FIELDS = ["id", "fullname", "rollno", "department", "sgpi"];
 
 export default function Students() {
-
   const { currentMode } = useStateContext();
 
   const [data, setData] = useState({
@@ -32,7 +24,7 @@ export default function Students() {
 
   const getData = async () => {
     try {
-      const col = collection(db, 'studentData');
+      const col = collection(db, "studentData");
       const snapShot = await getDocs(col);
 
       const fetchedData = snapShot.docs.map((doc, index) => {
@@ -47,7 +39,7 @@ export default function Students() {
 
       setData((prevData) => ({ ...prevData, rows: fetchedData })); // Update with fetched data
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
       // Handle errors gracefully, e.g., display an error message to the user
     }
   };
@@ -64,15 +56,15 @@ export default function Students() {
 
   return (
     <Layout>
-      <Box 
-       sx={{
-        height: '70%',
-        width: '90%',
-        position: 'absolute',
-        '& .MuiDataGrid-root': {
-          color: currentMode === 'Dark' ? 'white' : 'black',
-        }
-      }}
+      <Box
+        sx={{
+          height: "70%",
+          width: "90%",
+          position: "absolute",
+          "& .MuiDataGrid-root": {
+            color: currentMode === "Dark" ? "white" : "black",
+          },
+        }}
       >
         <DataGrid
           {...data}

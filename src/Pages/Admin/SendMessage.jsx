@@ -31,12 +31,12 @@ const SendMessage = () => {
         timestamp: new Date(),
       });
 
-      alert('Message sent successfully!');
+      console.log('Message sent successfully!');
       setMessage(''); // Clear the message input
       fetchSentMessages(); // Refresh the list of sent messages
     } catch (error) {
       console.error('Error sending message: ', error);
-      alert('Failed to send message');
+      console.log('Failed to send message');
     } finally {
       setLoading(false);
     }
